@@ -1,0 +1,38 @@
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom fixed-top p-5">
+  <div class="col-md-3 mb-2 mb-md-0">
+    <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
+      <i class="fa-solid fa-house fa-2x"></i>
+      <!-- Welcome the user if there's one -->
+      <% if user_signed_in? %>
+        <h3 class="ms-2">Bienvendio <%= @user.first_name %></h3>
+      <% else %>
+        <h3 class="ms-2">Bienvenido</h3>
+      <% end %>
+    </a>
+  </div>
+
+  <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+    <li><a href="#" class="nav-link px-2">Propiedades Disponibles</a></li>
+    <li><a href="#" class="nav-link px-2">Propiedades Vendidas</a></li>
+    <li><a href="#" class="nav-link px-2">Compradores</a></li>
+    <li><a href="#" class="nav-link px-2">Agentes</a></li>
+    <li><a href="#" class="nav-link px-2">Vendedores</a></li>
+  </ul>
+
+  <div class="col-md-3 text-end">
+    <% if user_signed_in? %>
+      <%= button_to "Cerrar Sesión", destroy_user_session_path, method: :delete, class: "btn btn-outline-primary me-2" %>
+      <!-- Optionally, add more links here for signed-in users like profile or settings -->
+    <% else %>
+      <!-- Display the new user session path if there's no user-->
+      <button type="button" class="btn btn-outline-primary me-2">
+        <%= link_to "Iniciar Sesión", new_user_session_path %>
+      </button>
+
+      <!-- Display the new user registration path if there's no user-->
+      <button type="button" class="btn btn-outline-secondary">
+        <%= link_to "Registrarse", new_user_registration_path %>
+      </button>
+    <% end %>
+  </div>
+</header>

@@ -1,173 +1,97 @@
--- TRIGGERS FOR THE AUDIT LOG
--- Trigger for the agents table
--- Log Agent creation
--- Add Admins
-CREATE OR REPLACE FUNCTION log_agent_creation()
+-- Function to create a trigger and log the action in the audit_logs table
+CREATE OR REPLACE FUNCTION log_action()
 RETURNS TRIGGER AS $$
+DECLARE
+  user_id INT;
 BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('create', 'Agent', NEW.id, 'Agent created');
-  RETURN NEW;
+  -- Attempt to retrieve the current user ID from a session variable
+  user_id := current_setting('myapp.current_user_id', true)::INTEGER;
+
+  INSERT INTO audit_logs(action, record_type, record_id, details, user_id)
+  VALUES (TG_ARGV[0], TG_ARGV[1], COALESCE(NEW.id, OLD.id), TG_ARGV[2], user_id);
+  RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_agent_creation
+-- TRIGGERS FOR THE AGENT CRUD OPERATIONS
+-- Create a new agent
+CREATE TRIGGER create_agent
 AFTER INSERT ON agents
-FOR EACH ROW EXECUTE FUNCTION log_agent_creation();
+FOR EACH ROW EXECUTE FUNCTION log_action('CREATE', 'Agent', 'New agent created');
 
--- Log Agent update
-CREATE OR REPLACE FUNCTION log_agent_update()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('update', 'Agent', NEW.id, 'Agent updated');
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_agent_update
+-- Update an agent
+CREATE TRIGGER update_agent
 AFTER UPDATE ON agents
-FOR EACH ROW EXECUTE FUNCTION log_agent_update();
+FOR EACH ROW EXECUTE FUNCTION log_action('UPDATE', 'Agent', 'Agent updated');
 
--- Log Agent deletion
-CREATE OR REPLACE FUNCTION log_agent_deletion()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('delete', 'Agent', OLD.id, 'Agent deleted');
-  RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_agent_deletion
+-- Delete an agent
+CREATE TRIGGER delete_agent
 AFTER DELETE ON agents
-FOR EACH ROW EXECUTE FUNCTION log_agent_deletion();
+FOR EACH ROW EXECUTE FUNCTION log_action('DELETE', 'Agent', 'Agent deleted');
 
--- Trigger for the buyers table
--- Log Buyer creation
-CREATE OR REPLACE FUNCTION log_buyer_creation()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('create', 'Buyer', NEW.id, 'Buyer created');
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_buyer_creation
+-- TRIGGERS FOR THE BUYER CRUD OPERATIONS
+-- Create a new buyer
+CREATE TRIGGER create_buyer
 AFTER INSERT ON buyers
-FOR EACH ROW EXECUTE FUNCTION log_buyer_creation();
+FOR EACH ROW EXECUTE FUNCTION log_action('CREATE', 'Buyer', 'New buyer created');
 
--- Log Buyer update
-CREATE OR REPLACE FUNCTION log_buyer_update()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('update', 'Buyer', NEW.id, 'Buyer updated');
-  RETURN NEW;
-END;
-
-CREATE TRIGGER trigger_buyer_update
+-- Update a buyer
+CREATE TRIGGER update_buyer
 AFTER UPDATE ON buyers
-FOR EACH ROW EXECUTE FUNCTION log_buyer_update();
+FOR EACH ROW EXECUTE FUNCTION log_action('UPDATE', 'Buyer', 'Buyer updated');
 
--- Log Buyer deletion
-CREATE OR REPLACE FUNCTION log_buyer_deletion()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('delete', 'Buyer', OLD.id, 'Buyer deleted');
-  RETURN OLD;
-END;
-
-CREATE TRIGGER trigger_buyer_deletion
+-- Delete a buyer
+CREATE TRIGGER delete_buyer
 AFTER DELETE ON buyers
-FOR EACH ROW EXECUTE FUNCTION log_buyer_deletion();
+FOR EACH ROW EXECUTE FUNCTION log_action('DELETE', 'Buyer', 'Buyer deleted');
 
--- Trigger for the sellers table
--- Log Seller creation
-CREATE OR REPLACE FUNCTION log_seller_creation()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('create', 'Seller', NEW.id, 'Seller created');
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_seller_creation
+-- TRIGGERS FOR THE SELLER CRUD OPERATIONS
+-- Create a new seller
+CREATE TRIGGER create_seller
 AFTER INSERT ON sellers
-FOR EACH ROW EXECUTE FUNCTION log_seller_creation();
+FOR EACH ROW EXECUTE FUNCTION log_action('CREATE', 'Seller', 'New seller created');
 
--- Log Seller update
-CREATE OR REPLACE FUNCTION log_seller_update()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('update', 'Seller', NEW.id, 'Seller updated');
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_seller_update
+-- Update a seller
+CREATE TRIGGER update_seller
 AFTER UPDATE ON sellers
-FOR EACH ROW EXECUTE FUNCTION log_seller_update();
+FOR EACH ROW EXECUTE FUNCTION log_action('UPDATE', 'Seller', 'Seller updated');
 
--- Log Seller deletion
-CREATE OR REPLACE FUNCTION log_seller_deletion()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('delete', 'Seller', OLD.id, 'Seller deleted');
-  RETURN OLD;
-END;
-
-CREATE TRIGGER trigger_seller_deletion
+-- Delete a seller
+CREATE TRIGGER delete_seller
 AFTER DELETE ON sellers
-FOR EACH ROW EXECUTE FUNCTION log_seller_deletion();
+FOR EACH ROW EXECUTE FUNCTION log_action('DELETE', 'Seller', 'Seller deleted');
 
--- Trigger for the properties table
--- Log Property creation
-CREATE OR REPLACE FUNCTION log_property_creation()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('create', 'Property', NEW.id, 'Property created');
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+-- TRIGGERS FOR THE AVAILABLE PROPERTY CRUD OPERATIONS
+-- Create a new available property
+CREATE TRIGGER create_available_property
+AFTER INSERT ON available_properties
+FOR EACH ROW EXECUTE FUNCTION log_action('CREATE', 'AvailableProperty', 'New available property created');
 
-CREATE TRIGGER trigger_property_creation
-AFTER INSERT ON properties
-FOR EACH ROW EXECUTE FUNCTION log_property_creation();
+-- Update an available property
+CREATE TRIGGER update_available_property
+AFTER UPDATE ON available_properties
+FOR EACH ROW EXECUTE FUNCTION log_action('UPDATE', 'AvailableProperty', 'Available property updated');
 
--- Log Property update
-CREATE OR REPLACE FUNCTION log_property_update()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('update', 'Property', NEW.id, 'Property updated');
-  RETURN NEW;
-END;
-$$ Language plpgsql;
+-- Delete an available property
+CREATE TRIGGER delete_available_property
+AFTER DELETE ON available_properties
+FOR EACH ROW EXECUTE FUNCTION log_action('DELETE', 'AvailableProperty', 'Available property deleted');
 
-CREATE TRIGGER trigger_property_update
-AFTER UPDATE ON properties
-FOR EACH ROW EXECUTE FUNCTION log_property_update();
+-- TRIGGERS FOR THE SOLD PROPERTY CRUD OPERATIONS
+-- Create a new sold property
+CREATE TRIGGER create_sold_property
+AFTER INSERT ON sold_properties
+FOR EACH ROW EXECUTE FUNCTION log_action('CREATE', 'SoldProperty', 'New sold property created');
 
--- Log Property deletion
-CREATE OR REPLACE FUNCTION log_property_deletion()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO audit_logs(action, record_type, record_id, details)
-  VALUES ('delete', 'Property', OLD.id, 'Property deleted');
-  RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
+-- Update a sold property
+CREATE TRIGGER update_sold_property
+AFTER UPDATE ON sold_properties
+FOR EACH ROW EXECUTE FUNCTION log_action('UPDATE', 'SoldProperty', 'Sold property updated');
 
-CREATE TRIGGER trigger_property_deletion
-AFTER DELETE ON properties
-FOR EACH ROW EXECUTE FUNCTION log_property_deletion();
+-- Delete a sold property
+CREATE TRIGGER delete_sold_property
+AFTER DELETE ON sold_properties
+FOR EACH ROW EXECUTE FUNCTION log_action('DELETE', 'SoldProperty', 'Sold property deleted');
 
 -- Execute the triggers in rails
 -- ActiveRecord::Base.connection.execute("SELECT create_agent('Nombre', 'Correo', 'FechaContrato', 'ComisionBase')")
