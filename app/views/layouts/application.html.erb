@@ -15,8 +15,10 @@
 
   <body>
     <%= render 'layouts/header' %>
-
-    <%= yield %>
+    
+    <section class="container grid text-center">
+      <%= yield %>
+    </section>
 
     <!-- Flash Messages -->
     <p class="notice"><%= notice %></p>

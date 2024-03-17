@@ -16,4 +16,7 @@ class Buyer < ApplicationRecord
   # Validations
   validates :name, presence: true, length: { maximum: 100 }
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  # Validate the uniqueness of the email
+  validates :email, uniqueness: true
 end

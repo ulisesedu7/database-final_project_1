@@ -4,7 +4,7 @@
       <i class="fa-solid fa-house fa-2x"></i>
       <!-- Welcome the user if there's one -->
       <% if user_signed_in? %>
-        <h3 class="ms-2">Bienvendio <%= @user.first_name %></h3>
+        <h3 class="ms-2">Bienvendio <%= current_user.first_name %></h3>
       <% else %>
         <h3 class="ms-2">Bienvenido</h3>
       <% end %>
@@ -12,11 +12,11 @@
   </div>
 
   <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-    <li><a href="#" class="nav-link px-2">Propiedades Disponibles</a></li>
-    <li><a href="#" class="nav-link px-2">Propiedades Vendidas</a></li>
-    <li><a href="#" class="nav-link px-2">Compradores</a></li>
-    <li><a href="#" class="nav-link px-2">Agentes</a></li>
-    <li><a href="#" class="nav-link px-2">Vendedores</a></li>
+    <li><a href="/available_properties" class="nav-link px-2">Propiedades Disponibles</a></li>
+    <li><a href="/sold_properties" class="nav-link px-2">Propiedades Vendidas</a></li>
+    <li><a href="/buyers" class="nav-link px-2">Compradores</a></li>
+    <li><a href="/agents" class="nav-link px-2">Agentes</a></li>
+    <li><a href="/sellers" class="nav-link px-2">Vendedores</a></li>
   </ul>
 
   <div class="col-md-3 text-end">

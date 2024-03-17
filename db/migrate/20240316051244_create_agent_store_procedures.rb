@@ -4,15 +4,16 @@ class CreateAgentStoreProcedures < ActiveRecord::Migration[7.1]
       CREATE OR REPLACE PROCEDURE create_agent(name VARCHAR, email VARCHAR, contract_date DATE, base_commission NUMERIC)
       AS $$
       BEGIN
-        INSERT INTO agents (name, email, contract_date, base_commission)
-        VALUES (name, email, contract_date, base_commission);
+        INSERT INTO agents (name, email, contract_date, base_commission, created_at, updated_at)
+        VALUES (name, email, contract_date, base_commission, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
       END;
       $$ LANGUAGE plpgsql;
 
       CREATE OR REPLACE PROCEDURE update_agent(agent_id INTEGER, name VARCHAR, email VARCHAR, contract_date DATE, base_commission NUMERIC)
       AS $$
       BEGIN
-        UPDATE agents SET name = name, email = email, contract_date = contract_date, base_commission = base_commission WHERE id = agent_id;
+        UPDATE agents SET name = name, email = email, contract_date = contract_date, base_commission = base_commission, updated_at = CURRENT_TIMESTAMP
+        WHERE id = agent_id;
       END;
       $$ LANGUAGE plpgsql;
 

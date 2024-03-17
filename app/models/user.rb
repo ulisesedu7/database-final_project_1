@@ -28,6 +28,10 @@ class User < ApplicationRecord
   # Relationships
   has_many :audit_logs
 
+  # Relationships
+  # A User can be either a agent, seller, or buyer with a polymorphic association
+  belongs_to :userable, polymorphic: true, optional: true
+
   # Enum for user roles
   enum role: {
     super_admin: 0,

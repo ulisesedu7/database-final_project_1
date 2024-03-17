@@ -10,8 +10,8 @@ class CreateFunctionForAuditLogs < ActiveRecord::Migration[7.1]
         -- Attempt to retrieve the current user ID from a session variable
         user_id := current_setting('myapp.current_user_id', true)::INTEGER;
 
-        INSERT INTO audit_logs(action, record_type, record_id, details, user_id)
-        VALUES (TG_ARGV[0], TG_ARGV[1], COALESCE(NEW.id, OLD.id), TG_ARGV[2], user_id);
+        INSERT INTO audit_logs(action, record_type, record_id, details, user_id, created_at, updated_at)
+        VALUES (TG_ARGV[0], TG_ARGV[1], COALESCE(NEW.id, OLD.id), TG_ARGV[2], user_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
         RETURN COALESCE(NEW, OLD);
       END;
       $$ LANGUAGE plpgsql;

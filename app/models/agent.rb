@@ -19,8 +19,11 @@ class Agent < ApplicationRecord
 
   # Validations
   validates :name, presence: true, length: { maximum: 100 }
-  validates :contract_date, presence: true, date: { before: -> { Date.current }, message: 'must be in the past' }
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :base_commission, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :base_commission, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :contract_date, presence: true
+
+  # Validate that the agent's email is unique
+  validates :email, uniqueness: true
 
 end
