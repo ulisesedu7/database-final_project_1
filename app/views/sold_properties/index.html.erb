@@ -1,0 +1,47 @@
+<p class="text-success"><%= notice %></p>
+
+<h1>Propiedades Vendidas</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  <% @sold_properties.each do |sold_property| %>
+    <div class="col">
+      <div class="card h-100">
+        <% if sold_property.image.attached? %>
+          <%= image_tag sold_property.image.url, class: "card-img-top" %>
+        <% else %>
+          <%= image_tag "placeholder.svg", class: "card-img-top" %>
+        <% end %>
+        <div class="card-body">
+          <h5 class="card-title"><%= sold_property.name %></h5>
+          <p class="card-text">
+            <%= sold_property.city %><br>
+            <%= sold_property.address %><br>
+            Bedrooms: <%= sold_property.bedrooms %><br>
+            Sale Price: <%= number_to_currency(sold_property.sale_price) %><br>
+            Sale Date: <%= sold_property.sale_date %><br>
+            Seller: <%= sold_property.seller.name %><br>
+            Buyer: <%= sold_property.buyer.name %><br>
+            Agent: <%= sold_property.agent.name %>
+          </p>
+        </div>
+        <% if can?(:manage, sold_property) %>
+          <div class="card-footer">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= sold_property.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= sold_property.id %>">
+                <li><%= link_to 'Editar', edit_sold_property_path(sold_property), class: "dropdown-item" %></li>
+                <li><%= button_to 'Eliminar', sold_property, method: :delete, data: { turbo_confirm: '¿Estás seguro?' }, class: "dropdown-item", form: { class: "d-inline" } %></li>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if can?(:manage, @sold_properties) %>
+  <%= link_to "Crear una nueva propiedad vendida", new_sold_property_path, class: "btn btn-success mt-3" %>
+<% end %>

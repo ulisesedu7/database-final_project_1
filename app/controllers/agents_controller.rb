@@ -9,6 +9,8 @@ class AgentsController < ApplicationController
 
   # GET /agents/1 or /agents/1.json
   def show
+    # Redirect to the agents index page
+    redirect_to agents_url
   end
 
   # GET /agents/new
@@ -23,6 +25,7 @@ class AgentsController < ApplicationController
   # POST /agents or /agents.json
   def create
     authorize! :create, @agent
+
     # Call the stored procedure for creating an agent
     ActiveRecord::Base.connection.execute(
       "CALL create_agent('#{agent_params[:name]}', '#{agent_params[:email]}', '#{agent_params[:contract_date]}', #{agent_params[:base_commission]});"
@@ -42,7 +45,7 @@ class AgentsController < ApplicationController
       "CALL update_agent(#{params[:id]}, '#{agent_params[:name]}', '#{agent_params[:email]}', '#{agent_params[:contract_date]}', #{agent_params[:base_commission]});"
     )
 
-    redirect_to agent_url(@agent), notice: "Agente actualizado exitosamente."
+    redirect_to edit_agent_url(@agent), notice: "Agente actualizado exitosamente."
   rescue ActiveRecord::StatementInvalid => e
     render :edit, status: :unprocessable_entity, alert: "Error al actualizar un agente"
   end

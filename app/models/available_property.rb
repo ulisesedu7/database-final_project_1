@@ -33,5 +33,26 @@ class AvailableProperty < ApplicationRecord
   has_many :agents, through: :available_properties_by_agents
 
   # Attachments
-  has_one_attached :image
+  has_one_attached :image, dependent: :destroy
+
+  # Callers
+  after_create :create_available_property_by_agent
+  before_destroy :purge_image
+
+  # Purge the attached image if any
+  def purge_image
+    image.purge if image.attached?
+  end
+
+  # Get the iamge URL
+  def image_url
+    if image.attached?
+      image.url
+    end
+  end
+
+  # Create the available property by agent relationship
+  def create_available_property_by_agent(agent_id)
+    available_properties_by_agents.create(agent_id: agent_id, available_property_id: id)
+  end
 end

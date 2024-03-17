@@ -1,0 +1,111 @@
+<%= form_with(model: sold_property, local: true, html: { class: 'needs-validation', novalidate: "" }) do |form| %>
+  <% if sold_property.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">The form couldn't be saved due to <%= pluralize(sold_property.errors.count, "error") %>:
+      </h4>
+      <ul>
+        <% sold_property.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mb-3">
+    <%= form.label :name, 'Property Name', class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, class: 'form-control', placeholder: 'Property Name', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :city, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :city, class: 'form-control', placeholder: 'City', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :address, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :address, class: 'form-control', placeholder: 'Address', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :bedrooms, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.number_field :bedrooms, class: 'form-control', placeholder: 'Number of Bedrooms', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :has_pool, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.check_box :has_pool, class: 'form-check-input' %>
+      <%= form.label :has_pool, 'Has Pool?', class: 'form-check-label' %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :sale_price, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.number_field :sale_price, step: 0.01, class: 'form-control', placeholder: 'Sale Price', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :sale_date, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.date_field :sale_date, class: 'form-control', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :agent_comission, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.number_field :agent_comission, class: 'form-control', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :agent_id, 'Agent', class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.collection_select :agent_id, @agents, :id, :name, include_blank: true, class: 'form-select', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :seller_id, 'Seller', class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.collection_select :seller_id, @sellers, :id, :name, include_blank: true, class: 'form-select', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :buyer_id, 'Buyer', class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.collection_select :buyer_id, @buyers, :id, :name, include_blank: true, class: 'form-select', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <%= form.label :image, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.file_field :image, direct_upload: true, class: 'form-control' %>
+    </div>
+  </div>
+
+  <% if sold_property.image.attached? %>
+    <div class="row mb-3">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-10">
+        <%= image_tag sold_property.image.url, class: 'img-thumbnail' %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="text-end">
+    <%= form.submit sold_property.persisted? ? 'Update Sold Property' : 'Create Sold Property', class: 'btn btn-primary' %>
+  </div>
+<% end %>

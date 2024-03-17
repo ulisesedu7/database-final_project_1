@@ -3,11 +3,11 @@
   <td><%= agent.name %></td>
   <td><%= agent.email %></td>
   <td><%= agent.contract_date %></td>
-  <td><%= number_to_percentage(agent.base_commission) %></td>
+  <td><%= number_to_percentage(agent.base_commission, precision: 2) %></td>
   <td>
     <% if can? :manage, Agent %>
-        <%= link_to 'Editar', edit_agent_path(agent), class: "btn btn-sm btn-secondary" %>
-        <%= link_to 'Eliminar', agent, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger" %>
+      <%= link_to 'Editar', edit_agent_path(agent), class: "btn btn-sm btn-secondary" %>
+      <%= button_to 'Eliminar', agent, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger", form: { data: { turbo_frame: "_top" } } %>
     <% end %>
   </td>
 </tr>

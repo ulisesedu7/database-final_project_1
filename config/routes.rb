@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :sold_properties
+  resources :available_properties
+  resources :sellers
+  resources :buyers
   resources :agents
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

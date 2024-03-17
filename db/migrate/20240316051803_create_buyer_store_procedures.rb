@@ -4,15 +4,16 @@ class CreateBuyerStoreProcedures < ActiveRecord::Migration[7.1]
       CREATE OR REPLACE PROCEDURE create_buyer(name VARCHAR, email VARCHAR)
       AS $$
       BEGIN
-        INSERT INTO buyers (name, email)
-        VALUES (name, email);
+        INSERT INTO buyers (name, email, created_at, updated_at)
+        VALUES (name, email, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
       END;
       $$ LANGUAGE plpgsql;
 
-      CREATE OR REPLACE PROCEDURE update_buyer(buyer_id INTEGER, name VARCHAR, email VARCHAR)
+      CREATE OR REPLACE PROCEDURE update_buyer(buyer_id INTEGER, buyer_name VARCHAR, buyer_email VARCHAR)
       AS $$
       BEGIN
-        UPDATE buyers SET name = name, email = email WHERE id = buyer_id;
+        UPDATE buyers SET name = buyer_name, email = buyer_email, updated_at = CURRENT_TIMESTAMP
+        WHERE id = buyer_id;
       END;
       $$ LANGUAGE plpgsql;
 
@@ -29,7 +30,7 @@ class CreateBuyerStoreProcedures < ActiveRecord::Migration[7.1]
     execute <<-SQL
       DROP PROCEDURE IF EXISTS create_buyer(name VARCHAR, email VARCHAR);
 
-      DROP PROCEDURE IF EXISTS update_buyer(buyer_id INTEGER, name VARCHAR, email VARCHAR);
+      DROP PROCEDURE IF EXISTS update_buyer(buyer_id INTEGER, buyer_name VARCHAR, buyer_email VARCHAR);
 
       DROP PROCEDURE IF EXISTS delete_buyer(buyer_id INTEGER);
     SQL

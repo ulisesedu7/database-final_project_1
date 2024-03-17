@@ -4,15 +4,16 @@ class CreateSellerStoreProcedure < ActiveRecord::Migration[7.1]
       CREATE OR REPLACE PROCEDURE create_seller(name VARCHAR, email VARCHAR)
       AS $$
       BEGIN
-        INSERT INTO sellers (name, email)
-        VALUES (name, email);
+        INSERT INTO sellers (name, email, created_at, updated_at)
+        VALUES (name, email, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
       END;
       $$ LANGUAGE plpgsql;
 
-      CREATE OR REPLACE PROCEDURE update_seller(seller_id INTEGER, name VARCHAR, email VARCHAR)
+      CREATE OR REPLACE PROCEDURE update_seller(seller_id INTEGER, seller_name VARCHAR, seller_email VARCHAR)
       AS $$
       BEGIN
-        UPDATE sellers SET name = name, email = email WHERE id = seller_id;
+        UPDATE sellers SET name = seller_name, email = seller_email, updated_at = CURRENT_TIMESTAMP
+        WHERE id = seller_id;
       END;
       $$ LANGUAGE plpgsql;
 
@@ -29,7 +30,7 @@ class CreateSellerStoreProcedure < ActiveRecord::Migration[7.1]
     execute <<-SQL
       DROP PROCEDURE IF EXISTS create_seller(name VARCHAR, email VARCHAR);
 
-      DROP PROCEDURE IF EXISTS update_seller(seller_id INTEGER, name VARCHAR, email VARCHAR);
+      DROP PROCEDURE IF EXISTS update_seller(seller_id INTEGER, seller_name VARCHAR, seller_email VARCHAR);
 
       DROP PROCEDURE IF EXISTS delete_seller(seller_id INTEGER);
     SQL

@@ -1,0 +1,52 @@
+<p class="text-success"><%= notice %></p>
+
+<h1>Propiedades Disponibles</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  <% @available_properties.each do |available_property| %>
+    <div class="col">
+      <div class="card h-100">
+        <% if available_property.image.attached? %>
+          <%= image_tag available_property.image.url, class: "card-img-top" %>
+        <% else %>
+          <%= image_tag "placeholder.svg", class: "card-img-top" %>
+        <% end %>
+        <div class="card-body">
+          <h5 class="card-title"><%= available_property.name %></h5>
+          <p class="card-text">
+            <%= available_property.city %><br>
+            <%= available_property.address %><br>
+            Bedrooms: <%= available_property.bedrooms %><br>
+            <% if available_property.has_pool %>
+              Piscina: Disponible
+            <% else %>
+              Piscina: No disponible
+            <% end %><br>
+            Listed Price: <%= number_to_currency(available_property.listed_price) %><br>
+            Seller: <%= available_property.seller.name %><br>
+            <% if available_property.agents.any? %>
+              Agent(s): <%= available_property.agents.map(&:name).join(", ") %>
+            <% end %>
+          </p>
+        </div>
+        <% if can?(:manage, available_property) %>
+          <div class="card-footer">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= available_property.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= available_property.id %>">
+                <li><%= link_to 'Editar', edit_available_property_path(available_property), class: "dropdown-item" %></li>
+                <li><%= button_to 'Eliminar', available_property, method: :delete, data: { turbo_confirm: '¿Estás seguro?' }, class: "dropdown-item", form: { class: "d-inline" } %></li>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if can?(:manage, @available_properties) %>
+  <%= link_to "Crear una nueva propiedad disponible", new_available_property_path, class: "btn btn-success mt-3" %>
+<% end %>
