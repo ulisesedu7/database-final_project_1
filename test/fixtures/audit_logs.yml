@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: audit_logs
+#
+#  id          :bigint           not null, primary key
+#  action      :string
+#  details     :text
+#  record_type :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  record_id   :integer
+#
+
+one:
+  action: MyString
+  record_type: MyString
+  record_id: 1
+  details: MyText
+
+two:
+  action: MyString
+  record_type: MyString
+  record_id: 1
+  details: MyText

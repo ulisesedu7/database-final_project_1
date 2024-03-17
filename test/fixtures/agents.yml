@@ -1,0 +1,24 @@
+# == Schema Information
+#
+# Table name: agents
+#
+#  id              :bigint           not null, primary key
+#  base_commission :decimal(, )
+#  contract_date   :date
+#  email           :string
+#  name            :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
+one:
+  name: MyString
+  email: MyString
+  contract_date: 2024-03-14
+  base_commission: 9.99
+
+two:
+  name: MyString
+  email: MyString
+  contract_date: 2024-03-14
+  base_commission: 9.99
