@@ -37,36 +37,15 @@ class SoldPropertiesController < ApplicationController
 
   # POST /sold_properties or /sold_properties.json
   def create
-    # Initialize a new SoldProperty from params excluding :image
     @sold_property = SoldProperty.new(sold_property_params.except(:image))
 
-    # Call your stored procedure here instead of save
-    ActiveRecord::Base.connection.execute(
-      "CALL create_sold_property(
-        '#{sold_property_params[:name]}',
-        '#{sold_property_params[:city]}',
-        '#{sold_property_params[:address]}',
-        #{sold_property_params[:sale_price]},
-        #{sold_property_params[:bedrooms]},
-        #{sold_property_params[:has_pool] ? 'TRUE' : 'FALSE'},
-        '#{sold_property_params[:sale_date]}',
-        #{sold_property_params[:agent_commission]},
-        #{sold_property_params[:buyer_id]},
-        #{sold_property_params[:seller_id]},
-        #{sold_property_params[:agent_id]}
-      );"
-    )
+    if @sold_property.save
+      @sold_property.image.attach(sold_property_params[:image]) if sold_property_params[:image].present?
 
-    # If the record is saved successfully and there's an image, attach it
-    if @sold_property.persisted? && sold_property_params[:image].present?
-      @sold_property.image.attach(sold_property_params[:image])
-
-      # Update the sold property with the attached image
-      @sold_property.update(sold_property_params)
+      redirect_to sold_properties_url, notice: "Propiedad vendida creada exitosamente."
+    else
+      redirect_to new_sold_property_url, alert: "Error al crear una propiedad vendida"
     end
-
-    # Redirect to the sold properties index page
-    redirect_to sold_properties_url, notice: "Propiedad vendida creada exitosamente."
 
     # If the store procedure fails, rescue the exception and redirect to the index page displaying a message
   rescue ActiveRecord::StatementInvalid => e
@@ -75,34 +54,15 @@ class SoldPropertiesController < ApplicationController
 
   # PATCH/PUT /sold_properties/1 or /sold_properties/1.json
   def update
-    # Call your stored procedure here instead of update
-    ActiveRecord::Base.connection.execute(
-      "CALL update_sold_property(
-        #{params[:id]},
-        '#{sold_property_params[:name]}',
-        '#{sold_property_params[:city]}',
-        '#{sold_property_params[:address]}',
-        #{sold_property_params[:sale_price]},
-        #{sold_property_params[:bedrooms]},
-        #{sold_property_params[:has_pool] ? 'TRUE' : 'FALSE'},
-        '#{sold_property_params[:sale_date]}',
-        #{sold_property_params[:agent_commission]},
-        #{sold_property_params[:buyer_id]},
-        #{sold_property_params[:seller_id]},
-        #{sold_property_params[:agent_id]}
-      );"
-    )
+    @sold_property.assign_attributes(sold_property_params.except(:image))
 
-    # If the record is updated successfully and there's an image, attach it
-    if @sold_property.update(sold_property_params) && sold_property_params[:image].present?
-      @sold_property.image.attach(sold_property_params[:image])
+    if @sold_property.save
+      @sold_property.image.attach(sold_property_params[:image]) if sold_property_params[:image].present?
 
-      # Update the sold property with the attached image
-      @sold_property.update(sold_property_params)
+      redirect_to sold_properties_url, notice: "Propiedad vendida actualizada exitosamente."
+    else
+      redirect_to edit_sold_property_url(@sold_property), alert: "Error al actualizar la propiedad vendida"
     end
-
-    # Redirect to the sold properties index page
-    redirect_to sold_properties_url, notice: "Propiedad vendida actualizada exitosamente."
 
     # If the store procedure fails, rescue the exception and redirect to the edit sold property page
   rescue ActiveRecord::StatementInvalid => e

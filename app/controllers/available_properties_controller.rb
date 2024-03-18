@@ -40,31 +40,13 @@ class AvailablePropertiesController < ApplicationController
     # Initialize a new AvailableProperty from params excluding :image
     @available_property = AvailableProperty.new(available_property_params.except(:image))
 
-    # Call your stored procedure here instead of save
-    ActiveRecord::Base.connection.execute(
-      "CALL create_available_property(
-        '#{available_property_params[:name]}',
-        '#{available_property_params[:city]}',
-        '#{available_property_params[:address]}',
-        #{available_property_params[:listed_price]},
-        #{available_property_params[:bedrooms]},
-        #{available_property_params[:has_pool] ? 'TRUE' : 'FALSE'},
-        '#{available_property_params[:publication_date]}',
-        #{available_property_params[:agent_id]},
-        #{available_property_params[:seller_id]}
-      );"
-    )
+  if @available_property.save
+    @available_property.image.attach(available_property_params[:image]) if available_property_params[:image].present?
 
-    # If the record is saved successfully and there's an image, attach it
-    # First find the persisted record and then attach the image
-    if available_property_params[:image].present?
-      @new_available_property = AvailableProperty.find_by(name: available_property_params[:name], city: available_property_params[:city], address: available_property_params[:address], listed_price: available_property_params[:listed_price], bedrooms: available_property_params[:bedrooms], has_pool: available_property_params[:has_pool], publication_date: available_property_params[:publication_date], agent_id: available_property_params[:agent_id], seller_id: available_property_params[:seller_id])
-
-      @new_available_property.image.attach(available_property_params[:image])
-    end
-
-    # Redirect to the available properties index page
     redirect_to available_properties_url, notice: "Propiedad disponible creada exitosamente."
+  else
+    redirect_to new_available_property_url, alert: "Error al crear una propiedad disponible"
+  end
 
     # If the stored procedure fails, rescue the exception and redirect to the new available property page
   rescue ActiveRecord::StatementInvalid => e
@@ -73,37 +55,15 @@ class AvailablePropertiesController < ApplicationController
 
   # PATCH/PUT /available_properties/1 or /available_properties/1.json
   def update
-    # Call your stored procedure for update here
-    ActiveRecord::Base.connection.execute(
-      "CALL update_available_property(
-        #{params[:id]},
-        '#{available_property_params[:name]}',
-        '#{available_property_params[:city]}',
-        '#{available_property_params[:address]}',
-        #{available_property_params[:listed_price]},
-        #{available_property_params[:bedrooms]},
-        #{available_property_params[:has_pool] ? 'TRUE' : 'FALSE'},
-        '#{available_property_params[:publication_date]}',
-        #{available_property_params[:agent_id]},
-        #{available_property_params[:seller_id]}
-      );"
-    )
+    @available_property.assign_attributes(available_property_params.except(:image))
 
-    # If the record is saved successfully and there's an image, attach it
-    # First find the persisted record and then attach the image
-    if available_property_params[:image].present?
-      @new_available_property = AvailableProperty.find_by(id: params[:id])
+    if @available_property.save
+      @available_property.image.attach(available_property_params[:image]) if available_property_params[:image].present?
 
-      # Remove the previous image if any
-      @new_available_property.image.purge if @new_available_property.image.attached?
-
-      @new_available_property.image.attach(available_property_params[:image])
+      redirect_to available_properties_url, notice: "Propiedad disponible actualizada exitosamente."
+    else
+      render :edit, status: :unprocessable_entity, alert: "Error al actualizar una propiedad disponible"
     end
-
-    # Create the available property by agent relationship
-    create_available_property_by_agent(available_property_params[:agent_id], params[:id])
-
-    redirect_to edit_available_property_url(@available_property), notice: "Propiedad disponible actualizada exitosamente."
 
   # If the stored procedure fails, rescue the exception and redirect to the edit available property page
   rescue ActiveRecord::StatementInvalid => e

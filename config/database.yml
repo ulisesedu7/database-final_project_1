@@ -84,3 +84,6 @@ production:
   database: database_final_project_1_production
   username: <%= ENV["DATABASE_FINAL_PROJECT_1_DATABASE_USERNAME"] %>
   password: <%= ENV["DATABASE_FINAL_PROJECT_1_DATABASE_PASSWORD"] %>
+  host: your_rds_instance_endpoint
+  port: 5432
+  
