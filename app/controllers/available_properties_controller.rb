@@ -100,6 +100,9 @@ class AvailablePropertiesController < ApplicationController
       @new_available_property.image.attach(available_property_params[:image])
     end
 
+    # Create the available property by agent relationship
+    create_available_property_by_agent(available_property_params[:agent_id], params[:id])
+
     redirect_to edit_available_property_url(@available_property), notice: "Propiedad disponible actualizada exitosamente."
 
   # If the stored procedure fails, rescue the exception and redirect to the edit available property page
@@ -137,5 +140,10 @@ class AvailablePropertiesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def available_property_params
     params.require(:available_property).permit(:name, :city, :address, :listed_price, :bedrooms, :has_pool, :publication_date, :image, :agent_id, :seller_id)
+  end
+
+  # Create the available property by agent relationship
+  def create_available_property_by_agent(agent_id, property_id)
+    AvailablePropertiesByAgent.create(agent_id: agent_id, available_property_id: property_id)
   end
 end

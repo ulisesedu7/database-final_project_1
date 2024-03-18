@@ -14,6 +14,12 @@ Rails.application.routes.draw do
   # Root path as '/' the home page
   root to: "home#index"
 
+  # Reports path
+  get "reports" => "home#reports", as: :reports
+
+  # audit_logs path
+  get "audit_logs" => "home#audit_logs", as: :audit_logs
+
   # Mount LetterOpenerWeb in development environment
   mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 end

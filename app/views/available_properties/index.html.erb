@@ -2,6 +2,10 @@
 
 <h1>Propiedades Disponibles</h1>
 
+<% if @available_properties.empty? %>
+  <p>No hay propiedades disponibles</p>
+<% end %>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
   <% @available_properties.each do |available_property| %>
     <div class="col">
@@ -24,9 +28,7 @@
             <% end %><br>
             Listed Price: <%= number_to_currency(available_property.listed_price) %><br>
             Seller: <%= available_property.seller.name %><br>
-            <% if available_property.agents.any? %>
-              Agent(s): <%= available_property.agents.map(&:name).join(", ") %>
-            <% end %>
+            Agent: <%= available_property.agent.name %>
           </p>
         </div>
         <% if can?(:manage, available_property) %>

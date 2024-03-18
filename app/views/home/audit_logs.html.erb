@@ -1,0 +1,30 @@
+<section class="container">
+  <h1>Bitacora</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Action</th>
+        <th scope="col">Details</th>
+        <th scope="col">Record Type</th>
+        <th scope="col">Record ID</th>
+        <th scope="col">User</th>
+        <th scope="col">Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @audit_logs.each_with_index do |log, index| %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= log.action %></td>
+          <td><%= log.details %></td>
+          <td><%= log.record_type %></td>
+          <td><%= log.record_id %></td>
+          <td><%= log.user.full_name %></td>
+          <td><%= log.created_at.in_time_zone("Central America").strftime("%Y-%m-%d %H:%M:%S") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

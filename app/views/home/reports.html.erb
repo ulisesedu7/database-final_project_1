@@ -1,0 +1,26 @@
+<section class="container">
+  <h1>Rsultados del Reporte</h1>
+  <h2><%= @report_title %></h2>
+  <% if @results.any? %>
+    <table class="table">
+      <thead>
+        <tr>
+          <% @results.first.keys.each do |key| %>
+            <th><%= key.humanize %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @results.each do |row| %>
+          <tr>
+            <% row.values.each do |value| %>
+              <td><%= value %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No data available for this report.</p>
+  <% end %>
+</section>

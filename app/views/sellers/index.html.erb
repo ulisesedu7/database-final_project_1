@@ -2,6 +2,10 @@
 
 <h1>Lista de Vendedores</h1>
 
+<% if @sellers.empty? %>
+  <p>No hay vendedores creados</p>
+<% end %>
+
 <table class="table">
   <thead>
     <tr>

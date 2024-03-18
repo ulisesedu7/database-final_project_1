@@ -1,4 +1,4 @@
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom fixed-top p-5">
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-sm-between py-3 mb-4 border-bottom fixed-top px-3 px-md-4 px-lg-5">
   <div class="col-md-3 mb-2 mb-md-0">
     <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
       <i class="fa-solid fa-house fa-2x"></i>
@@ -11,15 +11,43 @@
     </a>
   </div>
 
-  <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+  <ul class="nav me-auto mb-2 justify-content-center mb-md-0">
     <li><a href="/available_properties" class="nav-link px-2">Propiedades Disponibles</a></li>
     <li><a href="/sold_properties" class="nav-link px-2">Propiedades Vendidas</a></li>
-    <li><a href="/buyers" class="nav-link px-2">Compradores</a></li>
-    <li><a href="/agents" class="nav-link px-2">Agentes</a></li>
-    <li><a href="/sellers" class="nav-link px-2">Vendedores</a></li>
+    <% if user_signed_in? %>
+      <% if current_user.super_admin? || current_user.admin? || current_user.regular_user? %>
+        <li><a href="/buyers" class="nav-link px-2">Compradores</a></li>
+        <li><a href="/agents" class="nav-link px-2">Agentes</a></li>
+        <li><a href="/sellers" class="nav-link px-2">Vendedores</a></li>
+      <% end %>
+
+      <% if current_user.super_admin? || current_user.admin?%>
+        <!-- Reports Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reports
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><%= link_to 'Cantidad de ventas por agente', reports_path(report_type: 'sales_by_agent'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Cantidad de ventas por vendedor', reports_path(report_type: 'sales_by_seller'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Cantidad de compras por comprador', reports_path(report_type: 'purchases_by_buyer'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Cantidad de ventas por ubicación', reports_path(report_type: 'sold_properties_by_city'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Cantidad de ventas por precio de propiedad', reports_path(report_type: 'sold_properties_by_sale_price'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Cantidad de ventas por características', reports_path(report_type: 'sold_properties_by_characteristics'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Agente que vendió la mayor cantidad de propiedades en el año por valor total', reports_path(report_type: 'top_agent_by_sales_value'), class: "dropdown-item" %></li>
+            <li><%= link_to 'Promedio de venta de propiedaes en el año por agente', reports_path(report_type: 'avg_sale_price_and_time_on_market_by_agent'), class: "dropdown-item" %></li>
+          </ul>
+        </li>
+      <% end %>
+
+      <% if current_user.super_admin? || current_user.admin?%>
+        <!-- Reports Dropdown -->
+        <li><a href="/audit_logs" class="nav-link px-2">Bitadora</a></li>
+      <% end %>
+    <% end %>
   </ul>
 
-  <div class="col-md-3 text-end">
+  <div>
     <% if user_signed_in? %>
       <%= button_to "Cerrar Sesión", destroy_user_session_path, method: :delete, class: "btn btn-outline-primary me-2" %>
       <!-- Optionally, add more links here for signed-in users like profile or settings -->

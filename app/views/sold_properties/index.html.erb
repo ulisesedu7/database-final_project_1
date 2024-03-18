@@ -2,6 +2,10 @@
 
 <h1>Propiedades Vendidas</h1>
 
+<% if @sold_properties.empty? %>
+  <p>No hay propiedades vendidas</p>
+<% end %>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
   <% @sold_properties.each do |sold_property| %>
     <div class="col">

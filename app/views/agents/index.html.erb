@@ -2,6 +2,10 @@
 
 <h1>Lista de Agentes</h1>
 
+<% if @agents.empty? %>
+  <p>No hay agentes creados</p>
+<% end %>
+
 <table class="table">
   <thead>
     <tr>

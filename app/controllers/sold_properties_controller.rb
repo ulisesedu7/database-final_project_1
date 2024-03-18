@@ -70,7 +70,7 @@ class SoldPropertiesController < ApplicationController
 
     # If the store procedure fails, rescue the exception and redirect to the index page displaying a message
   rescue ActiveRecord::StatementInvalid => e
-    redirect_to sold_properties_url, alert: "No se puede crear una propiedad vendida sin un comprador"
+    redirect_to sold_properties_url, alert: "Propiedad vendida no creada. Error en el servidor. Inténtelo de nuevo."
   end
 
   # PATCH/PUT /sold_properties/1 or /sold_properties/1.json

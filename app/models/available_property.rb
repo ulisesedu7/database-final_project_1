@@ -29,14 +29,12 @@ class AvailableProperty < ApplicationRecord
   # Relationships
   belongs_to :seller
   # Using a separate join model for the many-to-many relationship
-  has_many :available_properties_by_agents
-  has_many :agents, through: :available_properties_by_agents
+  belongs_to :agent
 
   # Attachments
   has_one_attached :image, dependent: :destroy
 
   # Callers
-  after_create :create_available_property_by_agent
   before_destroy :purge_image
 
   # Purge the attached image if any
@@ -49,10 +47,5 @@ class AvailableProperty < ApplicationRecord
     if image.attached?
       image.url
     end
-  end
-
-  # Create the available property by agent relationship
-  def create_available_property_by_agent(agent_id)
-    available_properties_by_agents.create(agent_id: agent_id, available_property_id: id)
   end
 end
