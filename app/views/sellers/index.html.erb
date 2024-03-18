@@ -1,0 +1,29 @@
+<p class="text-success"><%= notice %></p>
+
+<h1>Lista de Vendedores</h1>
+
+<% if @sellers.empty? %>
+  <p>No hay vendedores creados</p>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <% if can? :manage, Seller %>
+        <th scope="col">Actions</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sellers.each do |seller| %>
+      <%= render seller %>
+    <% end %>
+  </tbody>
+</table>
+
+<% if can?(:manage, @sellers) %>
+  <%= link_to "Nuevo Vendedor", new_seller_path, class: "btn btn-primary" %>
+<% end %>

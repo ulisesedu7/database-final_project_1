@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @available_property %>
+
+<div>
+  <%= link_to "Edit this available property", edit_available_property_path(@available_property) %> |
+  <%= link_to "Back to available properties", available_properties_path %>
+
+  <%= button_to "Destroy this available property", @available_property, method: :delete %>
+</div>

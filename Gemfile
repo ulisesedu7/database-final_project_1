@@ -50,6 +50,15 @@ group :development, :test do
 
   # Autoload dotenv variables
   gem 'dotenv-rails'
+
+  # Faker data generator
+  gem 'faker'
+
+  # Rubocop for static code analysis
+  gem 'rubocop'
+
+  # Letter opener for development
+  gem 'letter_opener_web'
 end
 
 group :development do
@@ -61,6 +70,10 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+
+  gem 'annotate'
+
+  gem 'annotate_gem', git: 'https://github.com/johansenja/annotate_gem.git'
 end
 
 group :test do
@@ -68,3 +81,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "devise", "~> 4.9"
+
+gem 'cancancan'

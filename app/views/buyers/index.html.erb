@@ -1,0 +1,29 @@
+<p class="text-success"><%= notice %></p>
+
+<h1>Lista de Compradores</h1>
+
+<% if @buyers.empty? %>
+  <p>No hay compradores creados</p>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <% if current_user.super_admin? || current_user.admin? %>
+        <th scope="col">Acciones</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @buyers.each do |buyer| %>
+      <%= render buyer %>
+    <% end %>
+  </tbody>
+</table>
+
+<% if can?(:manage, @buyers) %>
+  <%= link_to "Nuevo Comprador", new_buyer_path, class: "btn btn-primary" %>
+<% end %>

@@ -1,0 +1,11 @@
+<tr id="<%= dom_id(buyer) %>">
+  <th scope="row"><%= buyer.id %></th>
+  <td><%= buyer.name %></td>
+  <td><%= buyer.email %></td>
+  <% if can?(:manage, Buyer) %>
+    <td>
+      <%= link_to 'Editar', edit_buyer_path(buyer), class: "btn btn-sm btn-secondary" %>
+      <%= button_to 'Eliminar', buyer, method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: "btn btn-sm btn-danger", form: { data: { turbo_frame: "_top" } } %>
+    </td>
+  <% end %>
+</tr>

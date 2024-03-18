@@ -13,3 +13,7 @@
  *= require_tree .
  *= require_self
  */
+/* Set a default padding top to everything */
+body {
+  padding-top: 80px;
+}

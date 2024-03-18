@@ -1,0 +1,30 @@
+<%= form_with(model: buyer, local: true, html: { class: 'needs-validation', novalidate: "" }) do |form| %>
+  <% if buyer.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">The form couldn't be saved due to <%= pluralize(buyer.errors.count, "error") %>:</h4>
+      <ul>
+        <% buyer.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row mb-3 align-items-center">
+    <%= form.label :name, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.text_field :name, class: 'form-control', placeholder: 'Name', required: true %>
+    </div>
+  </div>
+
+  <div class="row mb-3 align-items-center">
+    <%= form.label :email, class: 'col-sm-2 col-form-label' %>
+    <div class="col-sm-10">
+      <%= form.email_field :email, class: 'form-control', placeholder: 'Email', required: true %>
+    </div>
+  </div>
+
+  <div class="text-end">
+    <%= form.submit buyer.persisted? ? 'Actualizar Comprador' : 'Crear Comprador', class: 'btn btn-primary' %>
+  </div>
+<% end %>

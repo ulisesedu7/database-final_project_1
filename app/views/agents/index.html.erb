@@ -1,0 +1,31 @@
+<p class="text-success"><%= notice %></p>
+
+<h1>Lista de Agentes</h1>
+
+<% if @agents.empty? %>
+  <p>No hay agentes creados</p>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Contract Date</th>
+      <th scope="col">Base Commission</th>
+      <% if current_user.super_admin? || current_user.admin? %>
+        <th scope="col">Actions</th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @agents.each do |agent| %>
+      <%= render agent %>
+    <% end %>
+  </tbody>
+</table>
+
+<% if can?(:manage, @agents) %>
+  <%= link_to "Nuevo Agente", new_agent_path, class: "btn btn-primary" %>
+<% end %>
