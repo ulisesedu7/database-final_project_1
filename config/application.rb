@@ -25,7 +25,6 @@ module DatabaseFinalProject1
     # in config/environments, which are processed later.
     #
     config.time_zone = 'Central America'
-    config.i18n.default_locale = :es
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end
